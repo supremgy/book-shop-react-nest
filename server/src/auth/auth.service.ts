@@ -29,7 +29,8 @@ export class AuthService {
     const user = await this.userRepository.findOneBy({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { id: user.id };
+      const payload: JwtPayload = { id: user.id, role: user.role };
+
       const accessToken = await this.jwtService.sign(payload);
       return { accessToken };
     } else {
@@ -51,7 +52,7 @@ export class AuthService {
     }
   }
 
-  async changePassword(id: number, password: string) {
+  async changePassword({ id }: User, password: string) {
     const foundUser = await this.userRepository.findOneBy({ id });
 
     if (foundUser) {
