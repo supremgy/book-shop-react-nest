@@ -38,7 +38,7 @@ export class AuthController {
 
   @Put('/changepw')
   @UseGuards(AuthGuard())
-  changePassword(@Body() { id, password }: { id: number; password: string }) {
-    return this.authService.changePassword(id, password);
+  changePassword(@GetUser() user: User, @Body('password') password: string) {
+    return this.authService.changePassword(user, password);
   }
 }
