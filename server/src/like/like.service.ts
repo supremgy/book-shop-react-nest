@@ -11,4 +11,7 @@ export class LikeService {
   async addLike(user_id: number, liked_book_id: number): Promise<void> {
     return this.likeRepository.addLike(user_id, liked_book_id);
   }
+  async deleteLike(user_id: number, liked_book_id: number): Promise<void> {
+    return this.likeRepository.deleteLike(user_id, liked_book_id);
+  }
 }
