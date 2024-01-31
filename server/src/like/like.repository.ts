@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { Like } from './like.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class LikeRepository extends Repository<Like> {
@@ -16,6 +16,20 @@ export class LikeRepository extends Repository<Like> {
       await this.save(like);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async deleteLike(user_id: number, liked_book_id: number): Promise<void> {
+    const result = await this.createQueryBuilder()
+      .delete()
+      .from(Like)
+      .where('user_id = :user_id AND liked_book_id =:liked_book_id', {
+        user_id,
+        liked_book_id,
+      })
+      .execute();
+    if (result.affected === 0) {
+      throw new NotFoundException(`Can't find Book with id ${liked_book_id}`);
     }
   }
 }
