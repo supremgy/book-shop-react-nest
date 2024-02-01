@@ -8,6 +8,6 @@ export class BookController {
 
   @Get('/')
   getBooks(@Query(ValidationPipe) bookAllDto: BookAllDto) {
-    // return this.bookService.getBooks(bookAllDto);
+    return this.bookService.getBooks(bookAllDto);
   }
 }
