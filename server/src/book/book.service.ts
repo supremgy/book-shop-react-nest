@@ -16,10 +16,10 @@ export class BookService {
     public likeRepository: LikeRepository,
   ) {}
   async getBooks(bookAllDto: BookAllDto): Promise<Object> {
-    const { category_id, news } = bookAllDto;
+    const { categoryId, news } = bookAllDto;
 
     //카테고리별 신상조회
-    if (category_id && news) {
+    if (categoryId && news) {
       return this.bookRepository.latestBooksByCategory(bookAllDto);
       //카테고리별 전체조회
     }

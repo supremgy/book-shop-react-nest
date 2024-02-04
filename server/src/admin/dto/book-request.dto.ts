@@ -16,7 +16,7 @@ export class BookRequestDto {
 
   @IsNotEmpty()
   @IsNumber()
-  category_id: number;
+  categoryId: number;
 
   @IsNotEmpty()
   @IsEnum(BookFormStatus)
@@ -49,5 +49,5 @@ export class BookRequestDto {
   price: number;
 
   @IsDateString()
-  pub_date: string;
+  pubDate: string;
 }

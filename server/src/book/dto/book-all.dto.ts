@@ -2,7 +2,7 @@ import { IsInt, IsNotEmpty, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 export class BookAllDto {
   @Type(() => Number)
-  category_id?: number;
+  categoryId?: number;
 
   @Type(() => Boolean)
   news?: boolean;
