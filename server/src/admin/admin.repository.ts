@@ -12,7 +12,7 @@ export class AdminRepository extends Repository<Book> {
   async createBook(bookRequestDto: BookRequestDto): Promise<void> {
     const {
       title,
-      category_id,
+      categoryId,
       form,
       isbn,
       summary,
@@ -21,11 +21,11 @@ export class AdminRepository extends Repository<Book> {
       pages,
       contents,
       price,
-      pub_date,
+      pubDate,
     } = bookRequestDto;
     const book = this.create({
       title,
-      category_id,
+      categoryId,
       form,
       isbn,
       summary,
@@ -34,7 +34,7 @@ export class AdminRepository extends Repository<Book> {
       pages,
       contents,
       price,
-      pub_date,
+      pubDate,
     });
     try {
       await this.save(book);

@@ -13,7 +13,7 @@ export class Book extends BaseEntity {
   //     img:string
 
   @Column({ type: 'integer', nullable: false })
-  category_id: number;
+  categoryId: number;
 
   @Column({ type: 'varchar', nullable: false })
   form: BookFormStatus;
@@ -40,5 +40,5 @@ export class Book extends BaseEntity {
   price: number;
 
   @Column({ type: 'date', default: null })
-  pub_date: string;
+  pubDate: string;
 }

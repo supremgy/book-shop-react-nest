@@ -47,16 +47,15 @@ export class BookRepository extends Repository<Book> {
         };
       }),
     );
-
     bookResult = {
-      books: [...likesResult],
+      books: likesResult,
       pagination: { currentPage, totalPage, totalCount: bookCount },
     };
     return bookResult;
   }
 
   async latestBooksByCategory(bookAllDto: BookAllDto): Promise<Book> {
-    const { category_id, news, limit, currentPage } = bookAllDto;
+    const { categoryId, news, limit, currentPage } = bookAllDto;
 
     return;
   }
