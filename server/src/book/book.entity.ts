@@ -12,7 +12,7 @@ export class Book extends BaseEntity {
   // @Column()
   //     img:string
 
-  @Column({ type: 'integer', nullable: false })
+  @Column({ name: 'category_id', type: 'integer', nullable: false })
   categoryId: number;
 
   @Column({ type: 'varchar', nullable: false })
@@ -39,6 +39,6 @@ export class Book extends BaseEntity {
   @Column({ type: 'integer', nullable: false })
   price: number;
 
-  @Column({ type: 'date', default: null })
+  @Column({ name: 'pub_date', type: 'date', default: null })
   pubDate: string;
 }
