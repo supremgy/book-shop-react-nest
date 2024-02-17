@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 export class BookAllDto {
   @Type(() => Number)
