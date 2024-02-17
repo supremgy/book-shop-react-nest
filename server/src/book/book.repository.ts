@@ -1,68 +1,54 @@
+import { Like } from './../like/like.entity';
 import { BookAllDto } from './dto/book-all.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Book } from './book.entity';
-import { LikeRepository } from 'src/like/like.repository';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class BookRepository extends Repository<Book> {
-  constructor(
-    dataSource: DataSource,
-    @InjectRepository(LikeRepository) private likeRepository: LikeRepository,
-  ) {
+  constructor(dataSource: DataSource) {
     super(Book, dataSource.createEntityManager());
   }
 
-  async allBook(bookAllDto: BookAllDto): Promise<Object> {
+  async allBook(bookAllDto: BookAllDto): Promise<object> {
     let bookResult = {};
     const { limit, currentPage } = bookAllDto;
-
+    const offset = limit * (currentPage - 1);
     //bookTotalCount
     const bookCount = await this.count();
 
     //totalPage
-    let totalPage = Math.round(bookCount / limit);
+    const totalPage = Math.round(bookCount / limit);
     if (currentPage > totalPage) {
       throw new NotFoundException('currentPage가 totalPage보다 크다');
     }
-
-    //모든 책 조회
-    let offset = limit * (currentPage - 1);
-    const books = await this.find({ take: limit, skip: offset });
-
-    // likes 추가
-    const likesResult = await Promise.all(
-      books.map(async (book) => {
-        const likes = await this.likeRepository
-          .createQueryBuilder('like')
-          .where('like.liked_book_id = :liked_book_id', {
-            liked_book_id: book.id,
-          })
-          .getCount();
-
-        return {
-          ...book,
-          likes: likes,
-        };
-      }),
-    );
+    const books = await this.createQueryBuilder('book')
+      .select('*')
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('COUNT(*)::int', 'likes') // 문자열로 반환되는 이슈 https://github.com/typeorm/typeorm/issues/6196
+          .from(Like, 'like')
+          .where('like.liked_book_id = book.id');
+      }, 'likes')
+      .offset(offset)
+      .limit(4)
+      .getRawMany<{ likes: number }>();
     bookResult = {
-      books: likesResult,
-      pagination: { currentPage, totalPage, totalCount: bookCount },
+      books,
+      pagination: { currentPage, totalPage },
     };
     return bookResult;
   }
 
-  async latestBooksByCategory(bookAllDto: BookAllDto): Promise<Book> {
-    const { categoryId, news, limit, currentPage } = bookAllDto;
+  // async latestBooksByCategory(bookAllDto: BookAllDto): Promise<Book> {
+  //   const { categoryId, news, limit, currentPage } = bookAllDto;
 
-    return;
-  }
-  async booksByCategory(bookAllDto: BookAllDto): Promise<Book> {
-    return;
-  }
-  async latestBooks(bookAllDto: BookAllDto): Promise<Book> {
-    return;
-  }
+  //   return;
+  // }
+  // async booksByCategory(bookAllDto: BookAllDto): Promise<Book> {
+  //   return;
+  // }
+  // async latestBooks(bookAllDto: BookAllDto): Promise<Book> {
+  //   return;
+  // }
 }
