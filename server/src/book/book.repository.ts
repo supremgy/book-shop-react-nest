@@ -67,7 +67,7 @@ export class BookRepository extends Repository<Book> {
       .where('book.id= :bookId', { bookId })
       .addSelect((sq) => {
         return sq
-          .select('COALESCE(COUNT(like.id), 0)::int', 'likes')
+          .select('COUNT(*)::int', 'likes')
           .from(Like, 'like')
           .where('like.liked_book_id = book.id');
       }, 'likes');
