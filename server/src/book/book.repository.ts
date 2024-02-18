@@ -33,7 +33,7 @@ export class BookRepository extends Repository<Book> {
     if (categoryId && news) {
       qb.andWhere('book.category_id = :CategoryId', {
         CategoryId: categoryId,
-      }).andWhere('book.pub_date BETWEEN :startDate AND :endDateㄴ', {
+      }).andWhere('book.pub_date BETWEEN :startDate AND :endDate', {
         startDate: startDate,
         endDate: nowDate,
       });
@@ -60,5 +60,31 @@ export class BookRepository extends Repository<Book> {
       pagination: { currentPage, totalPage },
     };
     return bookResult;
+  }
+  async getDetail(bookId: number, userId: number): Promise<object> {
+    let qb = this.createQueryBuilder('book')
+      .select('*')
+      .where('book.id= :bookId', { bookId })
+      .addSelect((sq) => {
+        return sq
+          .select('COUNT(*)::int', 'likes')
+          .from(Like, 'like')
+          .where('like.liked_book_id = book.id');
+      }, 'likes');
+    if (userId) {
+      qb.addSelect((sq) => {
+        return sq
+          .select('COUNT(*)::int', 'liked')
+          .from(Like, 'like')
+          .where('like.liked_book_id = :bookId', { bookId })
+          .andWhere('like.user_id = :userId', { userId });
+      }, 'liked');
+    }
+
+    const result = await qb.getRawOne();
+    if (!result) {
+      throw new NotFoundException('책 정보가 없습니다.');
+    }
+    return result;
   }
 }
