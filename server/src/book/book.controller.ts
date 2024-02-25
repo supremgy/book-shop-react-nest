@@ -2,20 +2,21 @@ import { BookService } from './book.service';
 import {
   Controller,
   Get,
+  Headers,
   Param,
   ParseIntPipe,
   Query,
-  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { BookAllDto } from './dto/book-all.dto';
-import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/auth/user.entity';
-import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('book')
 export class BookController {
-  constructor(private bookService: BookService) {}
+  constructor(
+    private bookService: BookService,
+    private authService: AuthService,
+  ) {}
 
   @Get('/')
   getBooks(@Query(ValidationPipe) bookAllDto: BookAllDto) {
@@ -23,8 +24,17 @@ export class BookController {
   }
 
   @Get('/detail/:id')
-  @UseGuards(AuthGuard())
-  getBookDetail(@Param('id', ParseIntPipe) bookId, @GetUser() user: User) {
-    return this.bookService.getDetail(bookId, user.id);
+  getBookDetail(
+    @Param('id', ParseIntPipe) bookId,
+    @Headers('authorization') authorization: string,
+  ) {
+    let token: string = '';
+    let decoded;
+    if (authorization) {
+      token = authorization.replace('Bearer ', '');
+      decoded = this.authService.decodedToken(token);
+    }
+
+    return this.bookService.getDetail(bookId, decoded?.id);
   }
 }
