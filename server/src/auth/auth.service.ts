@@ -10,6 +10,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import { User } from './user.entity';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,19 @@ export class AuthService {
     private userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
+  getUserFromRequest(req: Request): User | undefined {
+    return req.user as User; // req.user에는 JwtStrategy에서 저장한 사용자 정보가 들어있습니다.
+  }
+  decodedToken(token: string) {
+    try {
+      const decoded = this.jwtService.verify(token);
+      return decoded;
+    } catch (error) {
+      console.error('Token decoding error : ', error.message);
+
+      return null;
+    }
+  }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     return this.userRepository.createUser(authCredentialsDto);

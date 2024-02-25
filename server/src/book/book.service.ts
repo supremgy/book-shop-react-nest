@@ -12,7 +12,7 @@ export class BookService {
   async getBooks(bookAllDto: BookAllDto): Promise<object> {
     return this.bookRepository.allBook(bookAllDto);
   }
-  async getDetail(bookId: number, userId: number) {
+  async getDetail(bookId: number, userId?: number) {
     return this.bookRepository.getDetail(bookId, userId);
   }
 }

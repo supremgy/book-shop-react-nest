@@ -61,7 +61,7 @@ export class BookRepository extends Repository<Book> {
     };
     return bookResult;
   }
-  async getDetail(bookId: number, userId: number): Promise<object> {
+  async getDetail(bookId: number, userId?: number): Promise<object> {
     let qb = this.createQueryBuilder('book')
       .select('*')
       .where('book.id= :bookId', { bookId })
