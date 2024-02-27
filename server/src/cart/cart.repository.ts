@@ -13,14 +13,40 @@ export class CartRepository extends Repository<Cart> {
     const { bookId, quantity } = cartCreateDto;
 
     const cart = this.create({
-      bookId,
+      book: { id: bookId },
       quantity,
-      userId,
+      user: { id: userId },
     });
     try {
       await this.save(cart);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async getCartItem(userId: number, selected?: number[]) {
+    console.log(selected);
+    const query = this.createQueryBuilder('cart')
+      .leftJoinAndSelect('cart.book', 'book')
+      .select([
+        'cart.id',
+        'book.id',
+        'book.title',
+        'book.summary',
+        'book.price',
+        'cart.quantity',
+      ])
+      .where('cart.user_id = :userId', { userId });
+    if (selected && selected.length > 0) {
+      console.log(selected);
+      query.andWhere('cart.id IN (:...selected)', { selected });
+    }
+    try {
+      const cartItems = await query.getMany();
+      return cartItems;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Failed to get cart items');
     }
   }
 }

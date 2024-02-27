@@ -13,4 +13,7 @@ export class CartService {
   async addToCart(userId: number, cartCreateDto: CartCreateDto) {
     return this.cartRepository.addToCart(userId, cartCreateDto);
   }
+  async getCartItem(userId: number, selected?: number[]) {
+    return this.cartRepository.getCartItem(userId, selected);
+  }
 }

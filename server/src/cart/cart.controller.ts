@@ -26,8 +26,13 @@ export class CartController {
     return this.cartService.addToCart(user.id, cartCreateDto);
   }
 
-  // @Get('/')
-  // getCartItem(@GetUser() user: User) {}
+  @Get('/')
+  getCartItem(
+    @GetUser() user: User,
+    @Body() { selected }: { selected: number[] },
+  ) {
+    return this.cartService.getCartItem(user.id, selected);
+  }
 
   // @Delete('/:id')
   // removeCartItem(@GetUser() user: User) {}
