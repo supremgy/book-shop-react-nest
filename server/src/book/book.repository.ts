@@ -63,7 +63,8 @@ export class BookRepository extends Repository<Book> {
   }
   async getDetail(bookId: number, userId?: number): Promise<object> {
     let qb = this.createQueryBuilder('book')
-      .select('*')
+      .select(['book.*', 'category.name'])
+      .innerJoin('book.category', 'category')
       .where('book.id= :bookId', { bookId })
       .addSelect((sq) => {
         return sq
