@@ -8,6 +8,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   password: 'root',
   database: 'BookShop-app',
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
-  synchronize: true,
+  synchronize: false,
   namingStrategy: new SnakeNamingStrategy(),
 };
