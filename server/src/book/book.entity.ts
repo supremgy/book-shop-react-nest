@@ -1,5 +1,13 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BookFormStatus } from './book-status.enum';
+import { Category } from 'src/category/category.entity';
 
 @Entity()
 export class Book extends BaseEntity {
@@ -41,4 +49,8 @@ export class Book extends BaseEntity {
 
   @Column({ name: 'pub_date', type: 'date', default: null })
   pubDate: string;
+
+  @OneToOne(() => Category, { eager: true })
+  @JoinColumn({ name: 'id' })
+  category: Category;
 }
