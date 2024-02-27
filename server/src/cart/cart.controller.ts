@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   UseGuards,
   ValidationPipe,
@@ -34,6 +36,8 @@ export class CartController {
     return this.cartService.getCartItem(user.id, selected);
   }
 
-  // @Delete('/:id')
-  // removeCartItem(@GetUser() user: User) {}
+  @Delete('/:id')
+  removeCartItem(@Param('id', ParseIntPipe) id, @GetUser() user: User) {
+    return this.cartService.removeCartItem(id, user.id);
+  }
 }

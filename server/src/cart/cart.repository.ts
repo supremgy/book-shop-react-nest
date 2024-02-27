@@ -49,4 +49,15 @@ export class CartRepository extends Repository<Cart> {
       throw new Error('Failed to get cart items');
     }
   }
+
+  async removeCartItem(id: number, userId: number): Promise<void> {
+    const cart = await this.findOne({
+      where: { id: id, user: { id: userId } },
+    });
+    try {
+      await this.remove(cart);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

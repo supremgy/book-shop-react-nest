@@ -16,4 +16,7 @@ export class CartService {
   async getCartItem(userId: number, selected?: number[]) {
     return this.cartRepository.getCartItem(userId, selected);
   }
+  async removeCartItem(id: number, userId: number) {
+    return this.cartRepository.removeCartItem(id, userId);
+  }
 }
