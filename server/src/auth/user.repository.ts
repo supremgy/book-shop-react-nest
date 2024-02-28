@@ -3,9 +3,8 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { DataSource, Repository, QueryFailedError } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import * as bcrypt from 'bcryptjs';
