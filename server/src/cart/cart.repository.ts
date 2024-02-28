@@ -60,4 +60,23 @@ export class CartRepository extends Repository<Cart> {
       console.log(error);
     }
   }
+
+  async selectCartItem(items: number[]) {
+    const orderItems = await this.createQueryBuilder()
+      .select(['book_id', 'quantity'])
+      .where('id IN (:...items)', { items })
+      .getRawMany();
+    return orderItems;
+  }
+
+  async deleteCartItem(items: number[]) {
+    try {
+      await this.createQueryBuilder()
+        .delete()
+        .where('id IN (:...items)', { items })
+        .execute();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
