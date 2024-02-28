@@ -28,4 +28,18 @@ export class OrderedBookRepository extends Repository<OrderedBook> {
       console.log(error);
     }
   }
+  async getOrderDetail(orderId: number) {
+    const result = await this.createQueryBuilder('orderedBook')
+      .select([
+        'orderedBook.book_id',
+        'orderedBook.quantity as quantity',
+        'book.title as title',
+        'book.author as author',
+        'book.price as price',
+      ])
+      .leftJoin('orderedBook.book', 'book')
+      .where('orderedBook.order_id = :orderId', { orderId })
+      .getRawMany();
+    return result;
+  }
 }

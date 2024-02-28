@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   UseGuards,
   ValidationPipe,
@@ -27,8 +29,12 @@ export class OrderController {
   }
 
   @Get('/')
-  getOrders() {}
+  getOrders() {
+    return this.orderService.getOrders();
+  }
 
   @Get('/:id')
-  getOrderDetail() {}
+  getOrderDetail(@Param('id', ParseIntPipe) orderId: number) {
+    return this.orderService.getOrderDetail(orderId);
+  }
 }

@@ -58,4 +58,21 @@ export class OrderRepository extends Repository<Order> {
     const result = await this.cartRepository.deleteCartItem(items);
     return result;
   }
+
+  async getOrders() {
+    const result = await this.createQueryBuilder('order')
+      .select([
+        'order.id',
+        'order.created_at',
+        'order.book_title',
+        'order.total_quantity',
+        'order.total_price',
+        'delivery.address AS address',
+        'delivery.receiver AS receiver',
+        'delivery.contact AS contact',
+      ])
+      .leftJoin('order.delivery', 'delivery')
+      .getRawMany();
+    return result;
+  }
 }
